@@ -19,11 +19,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        openDatabase("Programming Project Database - Zoe Anderton");                     //connect to our database file, when you stop the server the connection to the database
-        // is closed and you can access it through SQLite Studio
+        openDatabase("Programming Project Database - Zoe Anderton.db");                     //connect to our database file, when you stop the server the connection to the database
+                                                                                                   // is closed and you can access it through SQLite Studio
 
         ResourceConfig config = new ResourceConfig();       // prepare our Jersey Servlet, 'Servlet' is a Java program that runs on a Java-enabled web servers.
-        // Jersey is our Servlet Library, Jetty is our Server Library
+                                                            // Jersey is our Servlet Library, Jetty is our Server Library
 
         config.packages("controllers");                     // part of the server that provides API, listening and responding to HTTP requests
         config.register(MultiPartFeature.class);            // support multipart HTML forms
