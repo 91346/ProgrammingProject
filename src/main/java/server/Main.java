@@ -19,8 +19,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        openDatabase("Programming Project Database - Zoe Anderton.db");                     //connect to our database file, when you stop the server the connection to the database
-                                                                                                   // is closed and you can access it through SQLite Studio
+        openDatabase("Programming Project Database - Zoe Anderton.db");     //connect to our database file, when you stop the server the connection to the database
+                                                                                  // is closed and you can access it through SQLite Studio
 
         ResourceConfig config = new ResourceConfig();       // prepare our Jersey Servlet, 'Servlet' is a Java program that runs on a Java-enabled web servers.
                                                             // Jersey is our Servlet Library, Jetty is our Server Library
@@ -54,4 +54,18 @@ public class Main {
             System.out.println("Database connection error: " + exception.getMessage());
         }
     }
+
+    private static void closeDatabase()
+    {
+        try {
+
+            db.close();
+            System.out.println("Disconnected from database.");
+
+        } catch (Exception exception) {
+
+            System.out.println("Database disconnection error: " + exception.getMessage());
+        }
+    }
+
 }
