@@ -64,7 +64,7 @@ public class Users{
         try {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (UserID, Username) VALUES (?, ?)");
             ps.setInt(1, UserID);
-            ps.setString(2, Username);
+            //ps.setString(2, Username);
             ps.execute();
             return "{\"OK\": \"Added user.\"}";
         } catch (Exception exception) {
