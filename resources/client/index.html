@@ -2,9 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Knowledge Nerd</title>
+    <script src="/client/js/users.js"></script>
 </head>
 <body>
-    Hi!
+<button onclick='getUsersList();'>Run getUsersList</button>
+<table id="Users"></table>
+<br>
+
+<form id="userDetails">
+    User id: <input type="text" id="UserID">
+</form>
+<button onclick='getUser();'>Run getUser</button>
+<div id="DisplayOneUser"></div>
+<br>
+
+<form id="InputUserDetails">
+    Username: <input type="text" name="Username">
+    Password: <input type="text" name="Password">
+</form>
+<button onclick='addUser();'>Add User</button>
 </body>
 </html>

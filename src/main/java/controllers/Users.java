@@ -36,7 +36,7 @@ public class Users{
         }
     }
     @GET
-    @Path("get/{UserID}")
+    @Path("getUser/{UserID}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String GetUser(@PathParam("UserID") Integer UserID) {
@@ -59,7 +59,7 @@ public class Users{
     }
     @POST
     @Path("add")
-    public String UsersAdd(@FormDataParam("UserID") Integer UserID, @FormDataParam("UserName") String UserName) {
+    public String UsersAdd(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) {
         System.out.println("Invoked Users.UsersAdd()");
         try {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (UserID, Username) VALUES (?, ?)");
@@ -70,6 +70,40 @@ public class Users{
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
+        }
+    }
+
+    @POST
+    @Path("update")
+    public String updateFood(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) {
+        try {
+            System.out.println("Invoked Users.UpdateUsers/update UserID=" + UserID);
+            PreparedStatement ps = Main.db.prepareStatement("UPDATE Users SET Username = ? WHERE UserID = ?");
+            ps.setString(1, Username);
+            ps.setInt(2, UserID);
+            ps.execute();
+            return "{\"OK\": \"Users updated\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to update item, please see server console for more info.\"}";
+        }
+    }
+
+    @POST
+    @Path("delete/{UserID}")
+    public String DeleteUser(@PathParam("UserID") Integer UserID) throws Exception {
+        System.out.println("Invoked Users.DeleteUser()");
+        if (UserID == null) {
+            throw new Exception("UserID is missing in the HTTP request's URL.");
+        }
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Users WHERE UserID = ?");
+            ps.setInt(1, UserID);
+            ps.execute();
+            return "{\"OK\": \"User deleted\"}";
+        } catch (Exception exception) {
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
         }
     }
 }
