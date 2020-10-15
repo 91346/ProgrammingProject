@@ -59,12 +59,14 @@ public class Users{
     }
     @POST
     @Path("add")
-    public String UsersAdd(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) {
+    public String UsersAdd(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("Admin") Integer Admin) {
         System.out.println("Invoked Users.UsersAdd()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (UserID, Username) VALUES (?, ?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (UserID, Username, Password, Admin) VALUES (?, ?, ?, ?)");
             ps.setInt(1, UserID);
             ps.setString(2, Username);
+            ps.setString(3, Password);
+            ps.setInt(4, Admin);
             ps.execute();
             return "{\"OK\": \"Added user.\"}";
         } catch (Exception exception) {
