@@ -10,23 +10,24 @@ import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@Path("users/")
+@Path("user/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
 
-public class Users{
+public class User{
     @GET
     @Path("list")
-    public String UsersList() {
-        System.out.println("Invoked Users.UsersList()");
+    public String UserList() {
+        System.out.println("Invoked User.UserList()");
         JSONArray response = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT UserID, Username FROM Users");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT UserID, Username, Password FROM Users");
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
                 JSONObject row = new JSONObject();
                 row.put("UserID", results.getInt(1));
                 row.put("Username", results.getString(2));
+                row.put("Password", results.getString(3));
                 response.add(row);
             }
             return response.toString();
@@ -35,21 +36,22 @@ public class Users{
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
+
     @GET
     @Path("getUser/{UserID}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public String GetUser(@PathParam("UserID") Integer UserID) {
-        System.out.println("Invoked Users.GetUser() with UserID " + UserID);
+        System.out.println("Invoked User.GetUser() with UserID " + UserID);
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT Username, Token FROM Users WHERE UserID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Username, Password, Token FROM Users WHERE UserID = ?");
             ps.setInt(1, UserID);
             ResultSet results = ps.executeQuery();
             JSONObject response = new JSONObject();
             if (results.next()== true) {
-                response.put("UserID", UserID);
                 response.put("Username", results.getString(1));
-                response.put("Token", results.getInt(2));
+                response.put("Password", results.getString(2));
+                response.put("Token", results.getString(3));
             }
             return response.toString();
         } catch (Exception exception) {
@@ -57,16 +59,19 @@ public class Users{
             return "{\"Error\": \"Unable to get item, please see server console for more info.\"}";
         }
     }
+
     @POST
     @Path("add")
-    public String UsersAdd(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("Admin") Integer Admin) {
-        System.out.println("Invoked Users.UsersAdd()");
+    public String UsersAdd(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("DateJoined") String DateJoined, @FormDataParam("Admin") Integer Admin, @FormDataParam("Token") String Token){
+        System.out.println("Invoked User.UserAdd()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (UserID, Username, Password, Admin) VALUES (?, ?, ?, ?)");
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (UserID, Username, Password, DateJoined, Admin, Token) VALUES (?, ?, ?, ?, ?, ?)");
             ps.setInt(1, UserID);
             ps.setString(2, Username);
             ps.setString(3, Password);
-            ps.setInt(4, Admin);
+            ps.setString(4, DateJoined);
+            ps.setInt(5, Admin);
+            ps.setString(6, Token);
             ps.execute();
             return "{\"OK\": \"Added user.\"}";
         } catch (Exception exception) {
@@ -77,9 +82,9 @@ public class Users{
 
     @POST
     @Path("update")
-    public String updateFood(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) {
+    public String updateUser(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) {
         try {
-            System.out.println("Invoked Users.UpdateUsers/update UserID=" + UserID);
+            System.out.println("Invoked User.Update() UserID=" + UserID);
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Users SET Username = ? WHERE UserID = ?");
             ps.setString(1, Username);
             ps.setInt(2, UserID);
@@ -94,7 +99,7 @@ public class Users{
     @POST
     @Path("delete/{UserID}")
     public String DeleteUser(@PathParam("UserID") Integer UserID) throws Exception {
-        System.out.println("Invoked Users.DeleteUser()");
+        System.out.println("Invoked User.DeleteUser()");
         if (UserID == null) {
             throw new Exception("UserID is missing in the HTTP request's URL.");
         }
