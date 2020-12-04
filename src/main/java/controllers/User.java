@@ -11,51 +11,51 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.UUID;
 
-@Path("user/")
+@Path("user/") //HTTP request handler
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
 
 public class User{
     @GET
-    @Path("list")
+    @Path("list") //Command
     public String UserList() {
-        System.out.println("Invoked Users.UserList()");
+        System.out.println("Invoked Users.UserList()"); //Prints for error checking
         JSONArray response = new JSONArray();
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Users");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Users"); //Pre-prepared SQL statement
             ResultSet results = ps.executeQuery();
             while (results.next()==true) {
-                JSONObject row = new JSONObject();
+                JSONObject row = new JSONObject(); //creates a new JSON object using the values below
                 row.put("UserID", results.getInt(1));
                 row.put("Username", results.getString(2));
                 row.put("Password", results.getString(3));
                 response.add(row);
             }
             return response.toString();
-        } catch (Exception exception) {
+        } catch (Exception exception) { //catches any errors to make debugging easier
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to list items.  Error code xx.\"}";
         }
     }
 
     @GET
-    @Path("getUser/{UserID}")
+    @Path("getUser/{UserID}") //command
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String GetUser(@PathParam("UserID") Integer UserID) {
+    public String GetUser(@PathParam("UserID") Integer UserID) { //PathParam gets the value at the end of the command
         System.out.println("Invoked Users.GetUser() with UserID " + UserID);
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT Username, Password, Token FROM Users WHERE UserID = ?");
             ps.setInt(1, UserID);
             ResultSet results = ps.executeQuery();
-            JSONObject response = new JSONObject();
+            JSONObject response = new JSONObject();  //creates a new JSON object using the values below
             if (results.next()== true) {
                 response.put("Username", results.getString(1));
                 response.put("Password", results.getString(2));
                 response.put("Token", results.getString(3));
             }
             return response.toString();
-        } catch (Exception exception) {
+        } catch (Exception exception) { //catches any errors to make debugging easier
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to get item, please see server console for more info.\"}";
         }
@@ -64,6 +64,7 @@ public class User{
     @POST
     @Path("add")
     public String UsersAdd(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("DateJoined") String DateJoined, @FormDataParam("Admin") Integer Admin, @FormDataParam("Token") String Token){
+        //PathParam gets the value at the end of the command
         System.out.println("Invoked Users.UserAdd()");
         try {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (UserID, Username, Password, DateJoined, Admin, Token) VALUES (?, ?, ?, ?, ?, ?)");
@@ -75,7 +76,7 @@ public class User{
             ps.setString(6, Token);
             ps.execute();
             return "{\"OK\": \"Added user.\"}";
-        } catch (Exception exception) {
+        } catch (Exception exception) { //catches any errors to make debugging easier
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
         }
@@ -83,7 +84,7 @@ public class User{
 
     @POST
     @Path("update")
-    public String updateUser(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) {
+    public String updateUser(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) { //PathParam gets the value at the end of the command
         try {
             System.out.println("Invoked Users.Update() UserID=" + UserID);
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Users SET Username = ? WHERE UserID = ?");
@@ -91,7 +92,7 @@ public class User{
             ps.setInt(2, UserID);
             ps.execute();
             return "{\"OK\": \"Users updated\"}";
-        } catch (Exception exception) {
+        } catch (Exception exception) { //catches any errors to make debugging easier
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to update item, please see server console for more info.\"}";
         }
@@ -99,7 +100,7 @@ public class User{
 
     @POST
     @Path("delete/{UserID}")
-    public String DeleteUser(@PathParam("UserID") Integer UserID) throws Exception {
+    public String DeleteUser(@PathParam("UserID") Integer UserID) throws Exception { //PathParam gets the value at the end of the command
         System.out.println("Invoked Users.DeleteUser()");
         if (UserID == null) {
             throw new Exception("UserID is missing in the HTTP request's URL.");
@@ -109,7 +110,7 @@ public class User{
             ps.setInt(1, UserID);
             ps.execute();
             return "{\"OK\": \"User deleted\"}";
-        } catch (Exception exception) {
+        } catch (Exception exception) { //catches any errors to make debugging easier
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
         }
@@ -117,7 +118,7 @@ public class User{
 
     @POST
     @Path("login")
-    public String UsersLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) {
+    public String UsersLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) { //PathParam gets the value at the end of the command
         System.out.println("Invoked loginUser() on path user/login");
         try {
             PreparedStatement ps1 = Main.db.prepareStatement("SELECT Password FROM Users WHERE Username = ?");
@@ -131,7 +132,7 @@ public class User{
                     ps2.setString(1, Token);
                     ps2.setString(2, Username);
                     ps2.executeUpdate();
-                    JSONObject userDetails = new JSONObject();
+                    JSONObject userDetails = new JSONObject(); //creates a new JSON object using the values below
                     userDetails.put("Username", Username);
                     userDetails.put("Token", Token);
                     return userDetails.toString();
@@ -141,7 +142,7 @@ public class User{
             } else {
                 return "{\"Error\": \"Incorrect username.\"}";
             }
-        } catch (Exception exception) {
+        } catch (Exception exception) { //catches any errors to make debugging easier
             System.out.println("Database error during /user/login: " + exception.getMessage());
             return "{\"Error\": \"Server side error!\"}";
         }
@@ -166,7 +167,7 @@ public class User{
                 return "{\"error\": \"Invalid token!\"}";
 
             }
-        } catch (Exception ex) {
+        } catch (Exception ex) { //catches any errors to make debugging easier
             System.out.println("Database error during /users/logout: " + ex.getMessage());
             return "{\"error\": \"Server side error!\"}";
         }

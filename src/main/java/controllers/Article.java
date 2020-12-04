@@ -11,16 +11,16 @@ package controllers;
         import java.sql.ResultSet;
         import java.util.UUID;
 
-@Path("article/")
+@Path("article/") //HTTP request handler
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
 
 public class Article{
     @GET
-    @Path("get/{ArticleID}")
+    @Path("get/{ArticleID}") //Command
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public String GetArticle(@PathParam("ArticleID") Integer ArticleID) {
+    public String GetArticle(@PathParam("ArticleID") Integer ArticleID) { //PathParam gets the value at the end of the command
         System.out.println("Invoked Articles.ArticleGet() with ArticleID " + ArticleID);
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT Articles.Title, Articles.Description, Topics.TopicName, Users.Username, Articles.DateAdded, Articles.Picture, Articles.ArticleBody\n" +
@@ -28,7 +28,7 @@ public class Article{
                     "WHERE Articles.ArticleID = ?");
             ps.setInt(1, ArticleID);
             ResultSet results = ps.executeQuery();
-            JSONObject response = new JSONObject();
+            JSONObject response = new JSONObject(); //creates a new JSON object using the values below
             if (results.next()== true) {
                 response.put("Title", results.getString(1));
                 response.put("Description", results.getString(2));

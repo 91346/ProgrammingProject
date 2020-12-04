@@ -2,6 +2,7 @@
 
 //articleGet() returns one row of data from the database using a GET and path parameter
 function articleGet() {
+    debugger;
     console.log("Invoked articleGet()");     //console.log for debugging client side
     const ArticleID = document.getElementById("ArticleID").value;  //get the ArticleId from the HTML element with id=ArticleID
     //let ArticleID = 1; 			  //for hard code it if problems
