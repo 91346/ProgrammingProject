@@ -16,6 +16,110 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 
 public class User{
+    @POST
+    @Path("login") //command logs a user in
+    public String UsersLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) { //PathParam gets the value at the end of the command
+        System.out.println("Invoked loginUser() on path user/login");
+        try {
+            PreparedStatement ps1 = Main.db.prepareStatement("SELECT Password, Admin FROM Users WHERE Username = ?"); //pre-prepared SQL statement
+            ps1.setString(1, Username); //identifies a variable to be used in the SQL
+            ResultSet loginResults = ps1.executeQuery(); //runs SQL
+            if (loginResults.next() == true) {
+                String correctPassword = loginResults.getString(1);
+                int Admin = loginResults.getInt(2);
+                if (Password.equals(correctPassword)) {
+                    String Token = UUID.randomUUID().toString(); //converts Token to string
+                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE Username = ?"); //pre-prepared SQL statement
+                    ps2.setString(1, Token); //these lines identify the variables to be used in the SQL
+                    ps2.setString(2, Username);
+                    ps2.executeUpdate(); //runs SQL
+                    JSONObject userDetails = new JSONObject(); //creates a new JSON object using the values below
+                    userDetails.put("Username", Username);
+                    userDetails.put("Token", Token);
+                    userDetails.put("Admin", Admin);
+                    return userDetails.toString(); //converts userDetails to a string
+                } else {
+                    return "{\"Error\": \"Incorrect password!\"}";
+                }
+            } else {
+                return "{\"Error\": \"Incorrect username.\"}";
+            }
+        } catch (Exception exception) { //catches any errors to make debugging easier
+            System.out.println("Database error during /user/login: " + exception.getMessage());
+            return "{\"Error\": \"Server side error!\"}";
+        }
+    }
+
+    @POST
+    @Path("logout") //command logs a user out
+    public static String logout(@CookieParam("Token") String Token){
+        try{
+            System.out.println("user/logout "+ Token);
+            PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token=?"); //pre-prepared SQL statement
+            ps.setString(1, Token); //identifies a variable to be used in the SQL
+            ResultSet logoutResults = ps.executeQuery(); //runs SQL
+            if (logoutResults.next()){
+                int UserID = logoutResults.getInt(1);
+                //Set the token to null to indicate that the user is not logged in
+                PreparedStatement ps1 = Main.db.prepareStatement("UPDATE Users SET Token = NULL WHERE UserID = ?"); //pre-prepared SQL statement
+                ps1.setInt(1, UserID); //identifies a variable to be used in the SQL
+                ps1.executeUpdate(); //runs SQL
+                return "{\"status\": \"OK\"}";
+            } else {
+                return "{\"error\": \"Invalid token!\"}";
+
+            }
+        } catch (Exception ex) { //catches any errors to make debugging easier
+            System.out.println("Database error during /users/logout: " + ex.getMessage());
+            return "{\"error\": \"Server side error!\"}";
+        }
+    }
+
+    @POST
+    @Path("add") //command creates a new user
+    public String UsersAdd(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("DateJoined") String DateJoined, @FormDataParam("Admin") Integer Admin, @FormDataParam("Token") String Token){
+        //PathParam gets the value at the end of the command
+        System.out.println("Invoked Users.UserAdd()");
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (Username, Password, DateJoined, Admin, Token) VALUES (?, ?, ?, ?, ?)"); //pre-prepared SQL statement
+            ps.setString(1, Username); //these lines identify the variables to be used in the SQL
+            ps.setString(2, Password);
+            ps.setString(3, DateJoined);
+            ps.setInt(4, Admin);
+            ps.setString(5, Token);
+            ps.execute(); //runs SQL
+            return "{\"OK\": \"Added user.\"}";
+        } catch (Exception exception) { //catches any errors to make debugging easier
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
+        }
+    }
+
+    /*/ I was going to use this for identifying an admin, but decided to instead put it in user/login
+    @GET
+    @Path("identify") //command updates a user's attributes
+    public String identifyAdmin(@FormDataParam("Token") String Token) { //PathParam gets the values at the end of the command
+        try {
+            System.out.println("Invoked User.Identify() Token=" + Token);
+            PreparedStatement ps = Main.db.prepareStatement("SELECT Admin FROM Users WHERE Token = ?"); //Pre-prepared SQL statement
+            ps.setString(1, Token); //identifies a variable to be used in the SQL
+            ResultSet admin = ps.executeQuery(); //runs SQL
+            int Admin = admin.getInt(); //turns it into an integer
+            JSONObject response = new JSONObject();  //creates a new JSON object using the value below
+            if (Admin == 1){
+                response.put("Admin", Admin.getInt(1));
+                return "{\"OK\": \"Admin Recognised\"}";
+            } else{
+                response.put("Admin", Admin.getInt(1));
+                return "{\"OK\": \"Not Admin\"}";
+            }
+        } catch (Exception exception) { //catches any errors to make debugging easier
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to bookmark item, please see server console for more info.\"}";
+        }
+    }
+    */
+
     @GET
     @Path("list") //Command lists all the users
     public String UserList() {
@@ -62,26 +166,6 @@ public class User{
     }
 
     @POST
-    @Path("add") //command creates a new user
-    public String UsersAdd(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("DateJoined") String DateJoined, @FormDataParam("Admin") Integer Admin, @FormDataParam("Token") String Token){
-        //PathParam gets the value at the end of the command
-        System.out.println("Invoked Users.UserAdd()");
-        try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (Username, Password, DateJoined, Admin, Token) VALUES (?, ?, ?, ?, ?)"); //pre-prepared SQL statement
-            ps.setString(1, Username); //these lines identify the variables to be used in the SQL
-            ps.setString(2, Password);
-            ps.setString(3, DateJoined);
-            ps.setInt(4, Admin);
-            ps.setString(5, Token);
-            ps.execute(); //runs SQL
-            return "{\"OK\": \"Added user.\"}";
-        } catch (Exception exception) { //catches any errors to make debugging easier
-            System.out.println("Database error: " + exception.getMessage());
-            return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
-        }
-    }
-
-    @POST
     @Path("update") //command updates a user's attributes
     public String updateUser(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) { //PathParam gets the value at the end of the command
         try {
@@ -115,61 +199,8 @@ public class User{
         }
     }
 
-    @POST
-    @Path("login") //command logs a user in
-    public String UsersLogin(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password) { //PathParam gets the value at the end of the command
-        System.out.println("Invoked loginUser() on path user/login");
-        try {
-            PreparedStatement ps1 = Main.db.prepareStatement("SELECT Password FROM Users WHERE Username = ?"); //pre-prepared SQL statement
-            ps1.setString(1, Username); //identifies a variable to be used in the SQL
-            ResultSet loginResults = ps1.executeQuery(); //runs SQL
-            if (loginResults.next() == true) {
-                String correctPassword = loginResults.getString(1);
-                if (Password.equals(correctPassword)) {
-                    String Token = UUID.randomUUID().toString(); //converts token to string
-                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE Username = ?"); //pre-prepared SQL statement
-                    ps2.setString(1, Token); //these lines identify the variables to be used in the SQL
-                    ps2.setString(2, Username);
-                    ps2.executeUpdate(); //runs SQL
-                    JSONObject userDetails = new JSONObject(); //creates a new JSON object using the values below
-                    userDetails.put("Username", Username);
-                    userDetails.put("Token", Token);
-                    return userDetails.toString(); //converts userDetails to a string
-                } else {
-                    return "{\"Error\": \"Incorrect password!\"}";
-                }
-            } else {
-                return "{\"Error\": \"Incorrect username.\"}";
-            }
-        } catch (Exception exception) { //catches any errors to make debugging easier
-            System.out.println("Database error during /user/login: " + exception.getMessage());
-            return "{\"Error\": \"Server side error!\"}";
-        }
-    }
 
-    @POST
-    @Path("logout") //command logs a user out
-    public static String logout(@CookieParam("Token") String Token){
-        try{
-            System.out.println("user/logout "+ Token);
-            PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token=?"); //pre-prepared SQL statement
-            ps.setString(1, Token); //identifies a variable to be used in the SQL
-            ResultSet logoutResults = ps.executeQuery(); //runs SQL
-            if (logoutResults.next()){
-                int UserID = logoutResults.getInt(1);
-                //Set the token to null to indicate that the user is not logged in
-                PreparedStatement ps1 = Main.db.prepareStatement("UPDATE Users SET Token = NULL WHERE UserID = ?"); //pre-prepared SQL statement
-                ps1.setInt(1, UserID); //identifies a variable to be used in the SQL
-                ps1.executeUpdate(); //runs SQL
-                return "{\"status\": \"OK\"}";
-            } else {
-                return "{\"error\": \"Invalid token!\"}";
 
-            }
-        } catch (Exception ex) { //catches any errors to make debugging easier
-            System.out.println("Database error during /users/logout: " + ex.getMessage());
-            return "{\"error\": \"Server side error!\"}";
-        }
-    }
+
 }
 

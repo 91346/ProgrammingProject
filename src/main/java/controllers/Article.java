@@ -53,7 +53,7 @@ public class Article{
         System.out.println("Invoked Article.ArticleAdd()");
         try {
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Articles (Title, Description, Topic, Author, Date, Picture, Article) VALUES (?, ?, ?, ?, ?, ?, ?)"); //pre-prepared SQL statement
-            ps.setInt(1, Title); //these lines identify the variables to be used in the SQL
+            ps.setString(1, Title); //these lines identify the variables to be used in the SQL
             ps.setString(2, Description);
             ps.setString(3, Topic);
             ps.setString(4, Author);
@@ -93,9 +93,10 @@ public class Article{
             System.out.println("Invoked Article.Bookmark() ArticleID=" + ArticleID);
             PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?"); //SQL statement
             ps.setString(1, Token); //identifies a variable to be used in the SQL
-            ResultSet UserID = ps.executeQuery(); //runs SQL
+            ResultSet Result = ps.executeQuery(); //runs SQL
+            int UserID = Result.getInt(1);
             PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Accesses SET Bookmarked = 1 WHERE UserID = ? AND ArticleID = ?"); //pre-prepared SQL statement
-            ps2.setString(1, UserID); //these lines identify the variables to be used in the SQL
+            ps2.setInt(1, UserID); //these lines identify the variables to be used in the SQL
             ps2.setInt(2, ArticleID);
             ps2.execute(); //runs SQL
             return "{\"OK\": \"Article bookmarked\"}";

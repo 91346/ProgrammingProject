@@ -8,14 +8,15 @@ function UsersLogin() {
         method: "POST",
         body: formData,
     }).then(response => {
-        return response.json();                 //now return that promise to JSON
+        return response.json(); //now return that promise to JSON
     }).then(response => {
         if (response.hasOwnProperty("Error")) {
-            alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
+            alert(JSON.stringify(response));  // if it does, convert JSON object to string and alert
         } else {
             Cookies.set("Token", response.Token);
             Cookies.set("Username", response.Username);
-            window.open("index.html", "_self");       //open index.html in same tab
+            Cookies.set("Admin", response.Admin);
+            window.open("dashboard.html", "_self"); //open home.html in same tab
         }
     });
 }
@@ -24,7 +25,8 @@ function logout() {
     debugger;
     console.log("Invoked logout");
     let url = "/user/logout";
-    fetch(url, {method: "POST"
+    fetch(url, {
+        method: "POST",
     }).then(response => {
         return response.json();                 //now return that promise to JSON
     }).then(response => {
@@ -33,7 +35,7 @@ function logout() {
         } else {
             Cookies.remove("Token", response.Token);    //Username and Token are removed
             Cookies.remove("Username", response.Username);
-            window.open("index.html", "_self");       //open index.html in same tab
+            window.open("home.html", "_self");       //open home.html in same tab
         }
     });
 }
@@ -56,3 +58,7 @@ function addUser() {
         }                                                              //in the client folder called welcome.html
     });
 }
+
+//use let variable = Cookies.get(“Admin”); to get whether admin
+
+

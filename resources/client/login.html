@@ -5,18 +5,32 @@
     <title>Login</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
     <script src="/client/js/login.js"></script>
-
+    <style>
+        body {background-color: white;}
+        p {font-size: 16px;}
+        h1 {font-family: "Trebuchet MS"; background-color:DarkBlue; color: white; font-size: 3vw;}
+        button{background-color:White;}
+    </style>
 </head>
 <body>
+<article style="background-color:DarkBlue;">
+    <h1>Knowledge Nerd</h1> <!-- creates title -->
+    <nav> <!-- creates a navigaton bar -->
+        <a href="home.html" style="color:White;">HOME</a
+        <!-- TBD -->
+    </nav>
+</article>
 
+<p></p>
+Log in here:
 <form id="LoginForm">
     <input type="text" name="Username" id="Username">
     <input type="password" name="Password" id="Password">
 </form>
-<button class="button" onclick='UsersLogin();'>LOGIN</button>  <!--UsersLogin()in login.js-->
+<button class="button" style="background-color:White;" onclick='UsersLogin();'>LOGIN</button>  <!--UsersLogin()in login.js-->
 
-<!-- add logout stuff-->
-
+<p></p>
+Add a new account:
 <form id="InputUserDetails">
     Username: <input type="text" name="Username">
     Password: <input type="text" name="Password">
