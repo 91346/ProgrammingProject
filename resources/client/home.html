@@ -6,16 +6,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
     <script src="/client/js/index.js"></script>
     <style>
-        body {background-color: white;}
-        p {font-size: 16px;}
-        h1 {font-family: "Trebuchet MS"; background-color:DarkBlue; color: white; font-size: 3vw;}
-        button{background-color:White;}
+        body {background-color: white; text-align:center;}
+        p {font-size: 1vw;}
+        h2 {font-family: "Trebuchet MS"; background-color:DarkBlue; color: white; font-size: 2vw;}
+        button {background-color:white;}
+        .navbar {background-color:DarkBlue; text-align:left;}
+        .login {position:absolute; right:2vw; background-color:DarkBlue; border:DarkBlue; height:40px; width:100px; color:White; font-size:1vw;}
     </style>
 </head>
+
 <body>
-<article style="background-color:DarkBlue;">
-    <h1>Knowledge Nerd</h1> <!-- creates title -->
-    <button class="button" onclick='UsersLogin();'>LOGIN</button> <!-- creates a login button -->
+<article class="navbar">
+    <button class="login" onclick='window.location.href="login.html"'>SIGN IN</button> <!-- creates a login button -->
+    <h2>Knowledge Nerd</h2> <!-- creates title -->
     <nav> <!-- creates a navigaton bar -->
         <a href="home.html" style="color:White;">HOME</a>
         <a href="login.html" style="color:White;">Login</a>
