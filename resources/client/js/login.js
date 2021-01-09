@@ -35,6 +35,7 @@ function logout() {
         } else {
             Cookies.remove("Token", response.Token);    //Username and Token are removed
             Cookies.remove("Username", response.Username);
+            Cookies.remove("Admin", response.Admin);
             window.open("home.html", "_self");       //open home.html in same tab
         }
     });
@@ -81,4 +82,4 @@ function getUser() {
 }
 
 
-//use let variable = Cookies.get(“Admin”); to get whether admin
+//let variable = Cookies.get('Admin'); //to get whether admin

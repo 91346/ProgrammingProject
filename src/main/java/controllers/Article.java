@@ -48,19 +48,29 @@ public class Article{
 
     @POST
     @Path("add") //command creates a new article
-    public String ArticleAdd(@FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Topic") String Topic, @FormDataParam("Author") String Author, @FormDataParam("Date") String Date, @FormDataParam("Picture") String Picture, @FormDataParam("Article") String Article){
+    public String ArticleAdd(@FormDataParam("Title") String Title, @FormDataParam("Description") String Description, @FormDataParam("Topic") String Topic, @FormDataParam("Date") String Date, @FormDataParam("Picture") String Picture, @FormDataParam("ArticleBody") String ArticleBody, @FormDataParam("Token") String Token, @FormDataParam("Author") String Author){
         //PathParam gets the values at the end of the command
-        System.out.println("Invoked Article.ArticleAdd()");
+        System.out.println("Invoked Article.ArticleAdd()"  + Token + Author);
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Articles (Title, Description, Topic, Author, Date, Picture, Article) VALUES (?, ?, ?, ?, ?, ?, ?)"); //pre-prepared SQL statement
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Articles (Title, Description, TopicID, DateAdded, Picture, ArticleBody) VALUES (?, ?, ?, ?, ?, ?)"); //pre-prepared SQL statement
             ps.setString(1, Title); //these lines identify the variables to be used in the SQL
             ps.setString(2, Description);
             ps.setString(3, Topic);
-            ps.setString(4, Author);
-            ps.setString(5, Date);
-            ps.setString(6, Picture);
-            ps.setString(7, Article);
+            ps.setString(4, Date);
+            ps.setString(5, Picture);
+            ps.setString(6, ArticleBody);
             ps.execute(); //runs SQL
+            PreparedStatement ps2 = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?"); //SQL statement
+            ps2.setString(1, Token); //identifies a variable to be used in the SQL
+            ResultSet Result = ps2.executeQuery(); //runs SQL
+            int UserID = Result.getInt(1);
+            PreparedStatement ps3 = Main.db.prepareStatement("SELECT ArticleID FROM Articles WHERE Title = ?"); //SQL statement
+            ps3.setString(1, Title); //identifies a variable to be used in the SQL
+            ResultSet Result2 = ps3.executeQuery(); //runs SQL
+            int ArticleID = Result2.getInt(1);
+            PreparedStatement ps4 = Main.db.prepareStatement("INSERT INTO Accesses (ArticleID, UserID, Writes) VALUES (?, ?,1)");
+            ps4.setInt(1, ArticleID); //identifies a variable to be used in the SQL
+            ps4.setInt(2, UserID);
             return "{\"OK\": \"Added Article.\"}";
         } catch (Exception exception) { //catches any errors to make debugging easier
             System.out.println("Database error: " + exception.getMessage());
