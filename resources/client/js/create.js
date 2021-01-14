@@ -1,3 +1,4 @@
+"use strict";
 //createArticle function to add an article to the database
 function createArticle() {
     console.log("Invoked CreateArticle()");

@@ -144,8 +144,6 @@ public class User{
 
     @GET
     @Path("getUser/{UserID}") //command gets a single user
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
     public String GetUser(@PathParam("UserID") Integer UserID) { //PathParam gets the value at the end of the command
         System.out.println("Invoked Users.GetUser() with UserID " + UserID);
         try {
@@ -167,7 +165,7 @@ public class User{
 
     @POST
     @Path("update") //command updates a user's attributes
-    public String updateUser(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) { //PathParam gets the value at the end of the command
+    public String UserID(@FormDataParam("UserID") Integer UserID, @FormDataParam("Username") String Username) { //PathParam gets the value at the end of the command
         try {
             System.out.println("Invoked Users.Update() UserID=" + UserID);
             PreparedStatement ps = Main.db.prepareStatement("UPDATE Users SET Username = ? WHERE UserID = ?"); //pre-prepared SQL statement
@@ -186,7 +184,7 @@ public class User{
     public String DeleteUser(@PathParam("UserID") Integer UserID) throws Exception { //PathParam gets the value at the end of the command
         System.out.println("Invoked Users.DeleteUser()");
         if (UserID == null) {
-            throw new Exception("UserID is missing in the HTTP request's URL.");
+            throw new Exception("UserID is missing.");
         }
         try {
             PreparedStatement ps = Main.db.prepareStatement("DELETE FROM Users WHERE UserID = ?"); //pre-prepared SQL statement
@@ -199,6 +197,23 @@ public class User{
         }
     }
 
+    //UNFINISHED
+    @GET
+    @Path("getBookmarks/{Token}")
+    public String getBookmarks(@PathParam("Token") String Token) throws Exception {
+        System.out.println("Invoked Users.getBookmarks()");
+        try{
+            /*/PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?"); //SQL statement
+            ps.setString(1, Token); //identifies a variable to be used in the SQL
+            ResultSet Result = ps.executeQuery(); //runs SQL
+            int UserID = Result.getInt(1);*/
+            return "{\"bookmarks\"}";
+        } catch (Exception exception) { //catches any errors to make debugging easier
+            System.out.println("Database error: " + exception.getMessage());
+            return "{\"Error\": \"Unable to update item, please see server console for more info.\"}";
+        }
+    }
+
+
 
 }
-

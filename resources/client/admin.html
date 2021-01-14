@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Read An Article</title>
+    <title>Knowledge Nerd</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
-    <script src="/client/js/articleDisplay.js"></script>
+    <script src="/client/js/home.js"></script>
     <style>
         body {background-color: white; text-align:center;}
         p {font-size: 11px;}
@@ -14,21 +14,35 @@
         .login {position:absolute; right:2vw; background-color:DarkBlue; border:DarkBlue; height:40px; width:100px; color:White; font-size:1vw;}
     </style>
 </head>
+
 <body>
 <article class="navbar">
-    <button class="login" onclick='window.location.href="login.html"'>SIGN IN</button> <!-- creates a login button -->
+    <button class="login" onclick='UsersLogout();'>LOGOUT</button> <!-- creates a login button -->
     <h2>Knowledge Nerd</h2> <!-- creates title -->
     <nav> <!-- creates a navigaton bar -->
         <a href="home.html" style="color:White;">HOME</a>
+        <a href="dashboard.html" style="color:White;">Dashboard</a>
         <!-- TBD -->
     </nav>
 </article>
 
-<form id="ArticleRead">
-    Article id: <input type="text" id="ArticleID">
+<p></p>
+<button class="button" onclick='getUsersList();'>Run getUsersList</button>
+<table id="Users"></table>
+<br>
+
+<form id="userDetails">
+    User id: <input type="text" id="UserIDget">
 </form>
-<button onclick='articleGet();'>Get Article</button>
-<div id="DisplayArticle"></div>
+<button class="button" onclick='getUser();'>Run getUser</button>
+<div id="DisplayUpdate"></div>
+<br>
+
+<form id="userIDdel">
+    User id: <input type="text" id="UserIDup">
+</form>
+<button class="button" onclick='getUser();'>Run getUser</button>
+<div id="DisplayDelete"></div>
 <br>
 
 </body>
