@@ -11,6 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.UUID;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Path("user/") //HTTP request handler
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
@@ -75,13 +79,18 @@ public class User{
         }
     }
 
+
+
     @POST
     @Path("add") //command creates a new user
-    public String UsersAdd(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("DateJoined") String DateJoined){
+    public String UsersAdd(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password){
         //PathParam gets the value at the end of the command
         System.out.println("Invoked Users.UserAdd()");
         try {
-            String Token = UUID.randomUUID().toString();
+            Date date = new Date(); //gets current date
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); //sets format for date
+            String DateJoined = dateFormat.format(date); //formats and renames date
+            String Token = UUID.randomUUID().toString(); //creates token as string because user will be currently logged in
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (Username, Password, DateJoined, Admin, Token) VALUES (?, ?, ?, ?, ?)"); //pre-prepared SQL statement
             ps.setString(1, Username); //these lines identify the variables to be used in the SQL
             ps.setString(2, Password);

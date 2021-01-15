@@ -55,7 +55,7 @@ function addUser() {
         if (response.hasOwnProperty("Error")) {
             alert(JSON.stringify(response));
         } else {
-            window.open("/user/dashboard.html", "_self");   //URL replaces the current page.  Create a new html file
+            window.open("dashboard.html", "_self");   //URL replaces the current page.  Create a new html file
         }                                                              //in the client folder called welcome.html
     });
 }
