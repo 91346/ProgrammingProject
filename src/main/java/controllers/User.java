@@ -198,27 +198,31 @@ public class User{
     }
 
     //UNFINISHED
-    /*@GET
+    @GET
     @Path("getBookmarks/{Token}")
-    public String formData(@PathParam("Token") String Token) throws Exception {
-        System.out.println("Invoked Users.getBookmarks() with Token" + Token);
+    public String getToken(@PathParam("Token") String Token) throws Exception {
+        System.out.println("Invoked Users.getBookmarks() with Token " + Token);
         try {
+            String token = UUID.randomUUID().toString(); //converts Token to string
             PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?"); //SQL statement
-            ps.setString(1, Token); //identifies a variable to be used in the SQL
-            ResultSet Result = ps.executeQuery(); //runs SQL
-            int UserID = Result.getInt(1);
+            System.out.println("yes1");
+            ps.setString(1, token); //identifies a variable to be used in the SQL
+            System.out.println("yes2");
+            ResultSet result = ps.executeQuery(); //runs SQL
+            System.out.println("yes3");
+            int UserID = result.getInt(1); //THIS LINE DON'T WORK!!!!!!!!!!
             System.out.println("bookmarks tried");
             PreparedStatement ps2 = Main.db.prepareStatement("SELECT Articles.Title, Articles.Description, Articles.Topic, Users.Username, Articles.DateAdded, Articles.Picture FROM Articles JOIN Accesses ON Articles.ArticleID = Accesses.ArticleID JOIN Users ON Accesses.UserID = Users.UserID WHERE Accesses.UserID = ? AND Accesses.Bookmarked = 1"); //SQL statement
             ps2.setInt(1, UserID); //identifies a variable to be used in the SQL
-            ResultSet results = ps2.executeQuery(); //runs SQL
+            ResultSet result2 = ps2.executeQuery(); //runs SQL
             JSONObject response = new JSONObject();  //creates a new JSON object using the values below
-            if (results.next()== true) {
-                response.put("Title", results.getString(1));
-                response.put("Description", results.getString(2));
-                response.put("Topic", results.getString(3));
-                response.put("Author", results.getString(4));
-                response.put("Date", results.getString(5));
-                response.put("Picture", results.getString(6));
+            if (result2.next()== true) {
+                response.put("Title", result2.getString(1));
+                response.put("Description", result2.getString(2));
+                response.put("Topic", result2.getString(3));
+                response.put("Author", result2.getString(4));
+                response.put("Date", result2.getString(5));
+                response.put("Picture", result2.getString(6));
             }
             System.out.println("bookmarks tried");
             return response.toString();
@@ -226,7 +230,7 @@ public class User{
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to update item, please see server console for more info.\"}";
         }
-    }*/
+    }
 
 
 

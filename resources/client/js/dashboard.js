@@ -5,10 +5,9 @@ function getBookmarks() {
     console.log("Invoked getBookmarks()");
     debugger;
     let token = Cookies.get('Token'); //gets the token from the current user
-    const formData = new FormData();
-    formData.append('Token', token);
+    const Token = token;
     const url = "/user/getBookmarks/";    // API method on web server will be in Users class, method list
-    fetch(url + formData,{
+    fetch(url + Token,{
         method: "GET",		//Get method
     }).then(response => {
         return response.json();      //return response as JSON
