@@ -11,7 +11,7 @@ function getUsersList() {
         if (response.hasOwnProperty("Error")) { //checks if response from the web server has an "Error"
             alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert (pop up window)
         } else {
-            formatUsersList(response);          //this function will create an HTML table of the data (as per previous lesson)
+            formatUsersList(response);          //this function will create an HTML table of the data
         }
     });
 }

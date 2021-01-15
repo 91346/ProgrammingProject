@@ -12,15 +12,14 @@ function getBookmarks() {
         method: "GET",		//Get method
     }).then(response => {
         return response.json();      //return response as JSON
+        console.log("returned bookmarks");
     }).then(response => {
         if (response.hasOwnProperty("Error")) { //checks if response from the web server has an "Error"
             alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert (pop up window)
         } else {
-            /*/let dataHTML = "";
-            for (let item of myJSONArray) {
-                dataHTML += "<tr><td>" + item.____ + "<td><td>" + item._____ + "<tr><td>";
-            }*/
-            document.getElementById("Bookmarks").innerHTML = response;          //this function will create an HTML table of the data (as per previous lesson)
+            console.log("else bookmarks");
+            document.getElementById("Bookmarks").innerHTML = response.Title + "<tr><td>" + response.Description + "<tr><td>" + response.Topic + "  " + response.Author + "  " + response.Date + "<tr><td>" + response.Picture;          //this function will create an HTML table of the data
         }
     });
+
 }
