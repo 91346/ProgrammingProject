@@ -77,15 +77,16 @@ public class User{
 
     @POST
     @Path("add") //command creates a new user
-    public String UsersAdd(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("DateJoined") String DateJoined, @FormDataParam("Admin") Integer Admin, @FormDataParam("Token") String Token){
+    public String UsersAdd(@FormDataParam("Username") String Username, @FormDataParam("Password") String Password, @FormDataParam("DateJoined") String DateJoined){
         //PathParam gets the value at the end of the command
         System.out.println("Invoked Users.UserAdd()");
         try {
+            String Token = UUID.randomUUID().toString();
             PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Users (Username, Password, DateJoined, Admin, Token) VALUES (?, ?, ?, ?, ?)"); //pre-prepared SQL statement
             ps.setString(1, Username); //these lines identify the variables to be used in the SQL
             ps.setString(2, Password);
             ps.setString(3, DateJoined);
-            ps.setInt(4, Admin);
+            ps.setInt(4, 0);
             ps.setString(5, Token);
             ps.execute(); //runs SQL
             return "{\"OK\": \"Added user.\"}";
@@ -203,7 +204,7 @@ public class User{
     public String getToken(@PathParam("Token") String Token) throws Exception {
         System.out.println("Invoked Users.getBookmarks() with Token " + Token);
         try {
-            String token = UUID.randomUUID().toString(); //converts Token to string
+            String token = Token.toString(); //converts Token to string
             PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?"); //SQL statement
             System.out.println("yes1");
             ps.setString(1, token); //identifies a variable to be used in the SQL
