@@ -55,6 +55,9 @@ function addUser() {
         if (response.hasOwnProperty("Error")) {
             alert(JSON.stringify(response));
         } else {
+            Cookies.set("Token", response.Token);
+            Cookies.set("Username", response.Username);
+            Cookies.set("Admin", response.Admin);
             window.open("dashboard.html", "_self");   //URL replaces the current page.  Create a new html file
         }                                                              //in the client folder called welcome.html
     });

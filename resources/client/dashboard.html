@@ -7,7 +7,7 @@
     <script src="/client/js/dashboard.js"></script>
     <style>
         body {background-color: white; text-align:center;}
-        p {font-size: 11px;}
+        p {font-size: 16px; font-family: "Calibri Light"}
         h2 {font-family: "Trebuchet MS"; background-color:DarkBlue; color: white; font-size: 2vw;}
         button {background-color:white;}
         .navbar {background-color:DarkBlue; text-align:left;}
@@ -16,7 +16,7 @@
 </head>
 <body><!--onload="getBookmarks()"-->
 <article class="navbar">
-    <button class="login" onclick='UsersLogout();'>LOGOUT</button> <!-- creates a logout button -->
+    <button class="login" onclick='logout();'>LOGOUT</button> <!-- creates a logout button -->
     <h2>Knowledge Nerd</h2> <!-- creates title -->
     <nav> <!-- creates a navigaton bar -->
         <a href="home.html" style="color:White;">HOME</a>
@@ -24,8 +24,9 @@
         <a href="create.html" style="color:White;">Create</a>
     </nav>
 </article>
-
-<p></p>
+<br>
+<p>Welcome to your dashboard</p>
+<br>
 <button onclick='window.location.href="create.html"'>Create New Article</button> <!-- creates new article button -->
 
 <p></p>

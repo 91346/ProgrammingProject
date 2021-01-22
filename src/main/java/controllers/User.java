@@ -98,7 +98,11 @@ public class User{
             ps.setInt(4, 0);
             ps.setString(5, Token);
             ps.execute(); //runs SQL
-            return "{\"OK\": \"Added user.\"}";
+            JSONObject userDetails = new JSONObject(); //creates a new JSON object using the values below
+            userDetails.put("Username", Username);
+            userDetails.put("Token", Token);
+            userDetails.put("Admin", 0);
+            return userDetails.toString(); //converts userDetails to a string
         } catch (Exception exception) { //catches any errors to make debugging easier
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";
