@@ -16,7 +16,7 @@ function articleGet() {
         if (response.hasOwnProperty("Error")) {         //checks if response from server has an "Error"
             alert(JSON.stringify(response));            // if it does, convert JSON object to string and alert
         } else {
-            document.getElementById("DisplayArticle").innerHTML = response.Title + "<tr><td>" + response.Description + "<tr><td>" + response.Topic + "  " + response.Author + "  " + response.Date + "<tr><td>" + response.Picture + "<tr><td>" + response.Article;  //output data
+            document.getElementById("DisplayArticle").innerHTML = " " + response.Title + "<br>" + response.Description + "<br>Topic: " + response.Topic + "<br>Author: " + response.Author + "<br>Date Created: " + response.Date + "<br>Picture: " + response.Picture + "<br>" + response.Article;  //output data
         }
     });
 }
