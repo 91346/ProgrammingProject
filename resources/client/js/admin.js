@@ -19,7 +19,7 @@ function getUsersList() {
 function formatUsersList(myJSONArray){
     let dataHTML = "";
     for (let item of myJSONArray) {
-        dataHTML += "<tr><td>" + item.UserID + "<td><td>" + item.Username + "<tr><td>";
+        dataHTML += "<tr><td>" + item.UserID + ": " + item.Username + "<tr><td>";
     }
     document.getElementById("Users").innerHTML = dataHTML;
 }
@@ -38,7 +38,7 @@ function getUser() {
         if (response.hasOwnProperty("Error")) { //checks if response from server has an "Error"
             alert(JSON.stringify(response)); // if it does, convert JSON object to string and alert
         } else {
-            document.getElementById("DisplayOneUser").innerHTML = response.UserID + "<tr><td>" + response.Username;  //output data
+            document.getElementById("DisplayOneUser").innerHTML = UserID + ": " + response.Username;  //output data
         }
     });
 }
